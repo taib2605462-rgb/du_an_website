@@ -3,21 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Công Việc</title>
+    <title>Tech Task & Time Manager Pro</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Quản Lý Công Việc</h1>
+        <header>
+            <div class="brand-copy">
+                <p class="eyebrow">KHÔNG GIAN TẬP TRUNG CỦA BẠN</p>
+                <h1 class="tech-title">⚡ Quản lý công việc</h1>
+                <p class="page-subtitle">Lên kế hoạch, tập trung và nạp năng lượng theo cách của bạn.</p>
+            </div>
+            <button id="themeToggleBtn" class="icon-btn" type="button" aria-label="Chuyển sang chế độ tối">🌙 Chế độ tối</button>
+        </header>
 
-        <!-- Ô nhập công việc và nút Thêm -->
-        <div class="input-section">
-            <input type="text" id="taskInput" placeholder="Nhập công việc mới...">
-            <button id="addBtn">Thêm</button>
-        </div>
+        <nav class="tab-navigation" role="tablist" aria-label="Các khu vực">
+            <button class="tab-btn active" id="tasksTab" role="tab" aria-selected="true" aria-controls="tasksPanel" data-tab="tasksPanel">📋 Công việc</button>
+            <button class="tab-btn" id="timerTab" role="tab" aria-selected="false" aria-controls="timerPanel" data-tab="timerPanel">⏱️ Pomodoro</button>
+            <button class="tab-btn" id="musicTab" role="tab" aria-selected="false" aria-controls="musicPanel" data-tab="musicPanel">🎧 Nhạc</button>
+            <button class="tab-btn" id="settingsTab" role="tab" aria-selected="false" aria-controls="settingsPanel" data-tab="settingsPanel">⚙️ Giao diện</button>
+        </nav>
 
-        <!-- Danh sách hiển thị các công việc -->
-        <ul id="taskList"></ul>
+        <section class="tab-panel active" id="tasksPanel" role="tabpanel" aria-labelledby="tasksTab">
+            <section class="card input-card">
+                <h2 id="taskFormTitle">📝 Thêm công việc mới</h2>
+                <div class="input-group">
+                    <input type="text" id="taskInput" placeholder="Bạn muốn hoàn thành việc gì?">
+                    
+                    <div class="select-group">
+                        <select id="categorySelect">
+                            <option value="Học tập">💻 Lập trình / Học tập</option>
+                            <option value="Việc nhà">🏠 Việc nhà</option>
+                            <option value="Giải trí">🎮 Giải trí / Game</option>
+                            <option value="custom">✏️ Tự nhập phân loại</option>
+                        </select>
+                        <input type="text" id="customCategoryInput" placeholder="Nhập phân loại của bạn" aria-label="Phân loại tùy chỉnh" hidden>
+
+                        <select id="prioritySelect">
+                            <option value="Cao">🔴 Ưu tiên Cao</option>
+                            <option value="Trung bình" selected>🟡 Ưu tiên Trung bình</option>
+                            <option value="Thấp">🟢 Ưu tiên Thấp</option>
+                        </select>
+                    </div>
+
+                    <div class="date-group">
+                        <label for="taskDate">Hạn hoàn thành:</label>
+                        <input type="date" id="taskDate">
+                    </div>
+
+                    <div class="time-group">
+                        <span class="time-group-label">Thời gian (không bắt buộc):</span>
+                        <div class="time-inputs">
+                            <div class="time-control">
+                                <span class="time-control-label">Bắt đầu</span>
+                                <div class="time-selects">
+                                    <select id="taskStartHour" aria-label="Giờ bắt đầu">
+                                        <option value="">Giờ</option>
+                                    </select>
+                                    <span>:</span>
+                                    <select id="taskStartMinute" aria-label="Phút bắt đầu">
+                                        <option value="">Phút</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="time-control">
+                                <span class="time-control-label">Kết thúc</span>
+                                <div class="time-selects">
+                                    <select id="taskEndHour" aria-label="Giờ kết thúc">
+                                        <option value="">Giờ</option>
+                                    </select>
+                                    <span>:</span>
+                                    <select id="taskEndMinute" aria-label="Phút kết thúc">
+                                        <option value="">Phút</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="reminder-group">
+                        <label for="taskReminder">Nhắc trước:</label>
+                        <select id="taskReminder">
+                            <option value="0">Đúng giờ</option>
+                            <option value="10" selected>10 phút</option>
+                            <option value="30">30 phút</option>
+                        </select>
+                        <span>Áp dụng khi công việc có ngày và giờ bắt đầu.</span>
+                    </div>
+
+                    <div class="repeat-group">
+                        <label for="repeatSelect">Lặp lại:</label>
+                        <select id="repeatSelect">
+                            <option value="none">Không lặp lại</option>
+                            <option value="daily">Mỗi ngày</option>
+                            <option value="weekends">Mỗi cuối tuần</option>
+                            <option value="weekdays">Các ngày trong tuần (T2–T6)</option>
+                            <option value="custom">Chọn thứ trong tuần</option>
+                        </select>
+                        <div id="repeatDaysGroup" class="repeat-days" hidden>
+                            <label><input type="checkbox" value="1"> Thứ 2</label>
+                            <label><input type="checkbox" value="2"> Thứ 3</label>
+                            <label><input type="checkbox" value="3"> Thứ 4</label>
+                            <label><input type="checkbox" value="4"> Thứ 5</label>
+                            <label><input type="checkbox" value="5"> Thứ 6</label>
+                            <label><input type="checkbox" value="6"> Thứ 7</label>
+                            <label><input type="checkbox" value="0"> Chủ nhật</label>
+                        </div>
+                    </div>
+
+                    <button id="addBtn" class="btn btn-success">＋ Thêm công việc</button>
+                    <button id="cancelEditBtn" class="btn btn-secondary" type="button" hidden>Hủy chỉnh sửa</button>
+                </div>
+            </section>
+
+            <div class="task-layout">
+                <section class="card calendar-card">
+                    <div class="calendar-header">
+                        <div class="calendar-navigation">
+                            <button id="todayBtn" class="icon-btn" type="button">Hôm nay</button>
+                            <button id="prevMonthBtn" class="icon-btn" type="button" aria-label="Khoảng thời gian trước">◀</button>
+                        </div>
+                        <h2 id="monthYearDisplay"></h2>
+                        <div class="calendar-navigation">
+                            <button id="nextMonthBtn" class="icon-btn" type="button" aria-label="Khoảng thời gian sau">▶</button>
+                            <select id="calendarViewSelect" aria-label="Chế độ xem lịch">
+                                <option value="month">Tháng</option>
+                                <option value="week">Tuần</option>
+                                <option value="day">Ngày</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="calendar-weekdays" id="calendarWeekdays">
+                        <div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div>
+                    </div>
+
+                    <div id="calendarDays" class="calendar-days"></div>
+                    <div id="calendarLegend" class="calendar-legend" aria-label="Màu theo phân loại"></div>
+                    <p class="calendar-hint">Chọn một ngày hoặc khung giờ trống để lên lịch công việc.</p>
+                </section>
+
+                <section class="card upcoming-card" aria-labelledby="upcomingTitle">
+                    <div class="upcoming-heading">
+                        <div>
+                            <p class="eyebrow">KẾ HOẠCH GẦN NHẤT</p>
+                            <h2 id="upcomingTitle">Sắp tới</h2>
+                        </div>
+                        <span id="upcomingCount" class="upcoming-count">0</span>
+                    </div>
+                    <ul id="upcomingList" class="upcoming-list"></ul>
+                </section>
+
+                <section class="card list-card">
+                    <div class="list-header">
+                        <h2>📋 Công việc của bạn</h2>
+                        <div class="filter-group">
+                            <button class="filter-btn active" data-filter="all">Tất cả</button>
+                            <button class="filter-btn" data-filter="active">Đang làm</button>
+                            <button class="filter-btn" data-filter="completed">Đã xong</button>
+                        </div>
+                    </div>
+
+                    <div class="tools-group">
+                        <input type="text" id="searchInput" placeholder="🔍 Tìm công việc...">
+                        <select id="sortSelect">
+                            <option value="default">Mặc định (Mới nhất)</option>
+                            <option value="dateAsc">📅 Ngày gần nhất</option>
+                            <option value="dateDesc">📅 Ngày xa nhất</option>
+                        </select>
+                    </div>
+                    <div class="advanced-filters">
+                        <select id="categoryFilter" aria-label="Lọc theo phân loại">
+                            <option value="">Mọi phân loại</option>
+                        </select>
+                        <select id="priorityFilter" aria-label="Lọc theo ưu tiên">
+                            <option value="">Mọi mức ưu tiên</option>
+                            <option value="Cao">Ưu tiên cao</option>
+                            <option value="Trung bình">Ưu tiên trung bình</option>
+                            <option value="Thấp">Ưu tiên thấp</option>
+                        </select>
+                        <select id="dateFilter" aria-label="Lọc theo ngày">
+                            <option value="all">Mọi ngày</option>
+                            <option value="today">Hôm nay</option>
+                            <option value="upcoming">Sắp tới</option>
+                            <option value="overdue">Quá hạn</option>
+                        </select>
+                    </div>
+
+                    <div id="statsDisplay" class="stats-text">Đang tải thống kê...</div>
+                    <ul id="taskList"></ul>
+                </section>
+            </div>
+        </section>
+
+        <section class="tab-panel" id="timerPanel" role="tabpanel" aria-labelledby="timerTab" hidden>
+            <section class="card timer-card">
+                <p class="eyebrow">CHẾ ĐỘ TẬP TRUNG</p>
+                <h2>⏱️ Đồng hồ Pomodoro</h2>
+                <div id="timerDisplay" aria-live="polite">25:00</div>
+                
+                <div class="timer-input-group">
+                    <label for="customMinutes">Tập trung (phút):</label>
+                    <input type="number" id="customMinutes" value="25" min="1" max="180">
+                    <label for="breakMinutes">Nghỉ (phút):</label>
+                    <input type="number" id="breakMinutes" value="5" min="1" max="60">
+                </div>
+
+                <p id="timerPhase" class="timer-phase">Sẵn sàng tập trung</p>
+                <div class="button-group">
+                    <button id="startTimerBtn" class="btn btn-primary">Bắt đầu</button>
+                    <button id="pauseTimerBtn" class="btn btn-warning">Tạm dừng</button>
+                    <button id="resetTimerBtn" class="btn btn-secondary">Đặt lại</button>
+                </div>
+                <p id="pomodoroStats" class="pomodoro-stats">Hôm nay: 0 phiên · 0 phút tập trung</p>
+            </section>
+        </section>
+
+        <section class="tab-panel" id="musicPanel" role="tabpanel" aria-labelledby="musicTab" hidden>
+            <section class="card music-card">
+                <p class="eyebrow">BẬT NHẠC, VÀO GUỒNG</p>
+                <h2>🎧 Nhạc tập trung</h2>
+                <p class="music-description">Chọn tệp nhạc từ thiết bị. Nhạc vẫn phát khi bạn chuyển tab trong website hoặc sang tab trình duyệt khác. Nếu đóng hẳn trang web, trình duyệt sẽ dừng phát.</p>
+                <label class="music-file-label" for="musicFileInput">＋ Chọn tệp nhạc</label>
+                <input type="file" id="musicFileInput" accept="audio/*">
+                <p id="musicTrackName" class="music-track-name">Chưa chọn bài nhạc</p>
+                <button id="showMiniMusicBtn" class="btn btn-secondary" type="button" hidden>Hiện trình phát mini</button>
+                <div id="musicPlayerSlot" class="music-player-slot">
+                    <div id="musicControlBox" class="music-control-box">
+                        <button id="musicPlayPauseBtn" class="music-play-pause" type="button" aria-label="Phát nhạc" disabled>▶</button>
+                        <span id="musicCurrentTime" class="music-time">0:00</span>
+                        <input id="musicSeek" class="music-seek" type="range" min="0" max="1000" value="0" aria-label="Tiến độ bài nhạc" disabled>
+                        <span id="musicDuration" class="music-time">0:00</span>
+                        <label id="musicVolumeControl" class="music-volume-control" for="musicVolume" aria-label="Âm lượng">🔊 <input id="musicVolume" type="range" min="0" max="100" value="80"></label>
+                        <audio id="musicPlayer" preload="metadata"></audio>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section class="tab-panel" id="settingsPanel" role="tabpanel" aria-labelledby="settingsTab" hidden>
+            <section class="card settings-card">
+                <p class="eyebrow">CÁ NHÂN HÓA KHÔNG GIAN CỦA BẠN</p>
+                <h2>⚙️ Cài đặt giao diện</h2>
+                <p class="settings-description">Chọn hình nền từ thiết bị của bạn. Ảnh được lưu riêng trong trình duyệt này.</p>
+                <label class="background-file-label" for="backgroundFileInput">＋ Chọn hình nền</label>
+                <input type="file" id="backgroundFileInput" accept="image/*">
+                <p id="backgroundFileName" class="background-file-name">Đang dùng hình nền mặc định</p>
+                <div class="background-opacity-control">
+                    <label for="backgroundOverlayInput">Độ tối phủ lên hình nền</label>
+                    <input type="range" id="backgroundOverlayInput" min="0" max="85" value="32">
+                    <output id="backgroundOverlayValue" for="backgroundOverlayInput">32%</output>
+                </div>
+                <button id="resetBackgroundBtn" class="btn btn-secondary" type="button">Khôi phục hình nền mặc định</button>
+                <div class="backup-controls">
+                    <h3>💾 Sao lưu công việc</h3>
+                    <p class="settings-description">Xuất công việc thành tệp JSON hoặc nhập bản sao lưu đã có.</p>
+                    <div class="backup-buttons">
+                        <button id="exportTasksBtn" class="btn btn-primary" type="button">Xuất dữ liệu</button>
+                        <label class="background-file-label" for="importTasksInput">Nhập dữ liệu</label>
+                        <input type="file" id="importTasksInput" accept="application/json,.json">
+                    </div>
+                </div>
+                <div class="notification-controls">
+                    <h3>🔔 Nhắc nhở</h3>
+                    <p class="settings-description">Nhắc theo thời gian bạn chọn cho từng công việc. Trang cần đang mở và được cấp quyền thông báo.</p>
+                    <p id="notificationStatus" class="settings-description">Thông báo đang tắt.</p>
+                    <button id="enableNotificationsBtn" class="btn btn-secondary" type="button">Bật thông báo</button>
+                </div>
+            </section>
+        </section>
+    </div>
+
+    <dialog id="recurringScopeDialog" class="scope-dialog">
+        <form method="dialog">
+            <h2 id="scopeDialogTitle">Áp dụng cho công việc lặp</h2>
+            <label for="recurringScopeSelect">Phạm vi</label>
+            <select id="recurringScopeSelect">
+                <option value="single">Chỉ lần này</option>
+                <option value="series">Toàn bộ chuỗi lặp</option>
+            </select>
+            <div class="dialog-actions">
+                <button class="btn btn-secondary" value="cancel">Hủy</button>
+                <button id="confirmScopeBtn" class="btn btn-primary" value="confirm">Tiếp tục</button>
+            </div>
+        </form>
+    </dialog>
+
+    <div class="media-dock">
+        <aside id="miniTimer" class="mini-timer" aria-live="polite" hidden>
+            <button id="miniTimerDisplay" class="mini-timer-time" type="button" aria-label="Mở đồng hồ Pomodoro">25:00</button>
+            <span class="mini-timer-label">Pomodoro đang chạy</span>
+            <button id="miniTimerPauseBtn" class="mini-timer-pause" type="button" aria-label="Tạm dừng Pomodoro">⏸</button>
+            <button id="miniTimerCloseBtn" class="mini-timer-close" type="button" aria-label="Ẩn đồng hồ mini">×</button>
+        </aside>
+
+        <aside id="miniMusic" class="mini-music" aria-label="Trình phát nhạc" hidden>
+            <div class="mini-music-header">
+                <span id="miniMusicTrackName" class="mini-music-track"></span>
+                <button id="miniMusicCloseBtn" class="mini-music-close" type="button" aria-label="Ẩn trình phát mini">×</button>
+            </div>
+            <div id="miniMusicPlayerSlot"></div>
+        </aside>
     </div>
 
     <script src="script.js"></script>
