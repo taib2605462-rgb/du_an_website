@@ -318,11 +318,42 @@ header {
 }
 
 .tech-title {
+    display: flex;
+    align-items: center;
+    gap: 11px;
     margin: 0;
     color: var(--text-color);
     font-size: clamp(25px, 3vw, 34px);
     font-weight: 750;
     letter-spacing: -0.045em;
+}
+
+.brand-logo {
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    filter: drop-shadow(0 4px 10px rgba(0, 217, 255, 0.22));
+}
+
+.brand-logo-frame {
+    fill: rgba(0, 217, 255, 0.12);
+    stroke: #55e7ff;
+    stroke-width: 2;
+}
+
+.brand-logo-line {
+    fill: none;
+    stroke: #55e7ff;
+    stroke-linecap: round;
+    stroke-width: 2.4;
+}
+
+.brand-logo-check {
+    fill: none;
+    stroke: #b8a7ff;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 3.4;
 }
 
 .page-subtitle {
